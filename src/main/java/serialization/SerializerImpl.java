@@ -18,13 +18,13 @@ public class Serializator {
         this.objectMapper = new ObjectMapper();
     }
 
-    public Serializator(){
+    public Serializator() {
         this.objectMapper = new ObjectMapper();
         this.dataMapper = null;
         this.tagManager = null;
     }
 
-    public void serialize(){
+    public void serialize() {
         try {
             objectMapper.writeValue(new File(fileName), this.dataMapper);
         } catch (IOException e) {
@@ -32,16 +32,20 @@ public class Serializator {
         }
     }
 
-    public TagManager deserialize(){
+    public TagManager deserialize() {
         try {
+            //NOT YET TESTED
+            File file = new File(this.fileName);
+            if (!file.exists()) {
+                return new TagManager();
+            }
             this.dataMapper = this.objectMapper.readValue(new File(this.fileName), DataMapper.class);
             this.tagManager = new TagManager();
             dataMapper.loadToCurrentRun(this.tagManager);
-
+            return tagManager;
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            return this.tagManager;
+            return new TagManager();
         }
     }
 }
